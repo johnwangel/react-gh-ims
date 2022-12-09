@@ -6,6 +6,7 @@ export const clients = [
         city: 'Schenectady',
         state: 'NY',
         zip: '12301',
+        email : 'joe.schmo@schmoeresale.com',
         addresses : [
             {
                 name: 'Mary Schmo',
@@ -24,6 +25,7 @@ export const clients = [
         city: 'Los Angeles',
         state: 'CA',
         zip: '90001',
+        email : 'lana.lang@lanafashions.com',
         addresses : [
             {
                 name: 'Joe Lang',

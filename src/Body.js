@@ -36,10 +36,10 @@ class Body extends Component {
         {(this.props.view==='login')?<Login handleChange={this.props.handleChange} changeView={this.props.changeView}/>:null}
         {(this.props.view==='register')?<Register handleChange={this.props.handleChange} changeView={this.props.changeView}/>:null}
         {(this.props.view==='inventory')?<Inventory add={(this.props.add)?true:false} changeView={this.props.changeView}/>:null}
-        {(this.props.view==='purchaseOrder')?<PurchaseOrder add={this.props.add} changeView={this.props.changeView}/>:null}
+        {(this.props.view==='purchaseOrder')?<PurchaseOrder addItem={this.props.addItem} addClient={true} changeView={this.props.changeView}/>:null}
         {(this.props.view==='sendInvoice')?<SendInvoice changeView={this.props.changeView}/>:null}
         {(this.props.view==='invoice')?<Invoice changeView={this.props.changeView}/>:null}
-        {(this.props.view==='clients')?<Clients changeView={this.props.changeView}/>:null}
+        {(this.props.view==='clients')?<Clients add={this.props.add} addClient={this.props.addClient} changeView={this.props.changeView}/>:null}
         {(this.props.view==='thanks')?<Thanks changeView={this.props.changeView}/>:null}
         {(this.props.view==='profile')?<Profile changeView={this.props.changeView}/>:null}
         </div>

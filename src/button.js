@@ -22,7 +22,7 @@ export default function Button(props) {
     return <button  onMouseEnter={()=>changeHover(true)} 
                     onMouseLeave={()=>changeHover(false)} 
                     style={(hovering)?buttonHover:buttonStyle} 
-                    onClick={()=>props.changeView(props.next,props.add)}>
+                    onClick={()=>props.changeView(props.next,props.add,props.addItem,props.addClient)}>
             {props.text}
             </button>
 }

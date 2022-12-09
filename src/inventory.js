@@ -37,7 +37,7 @@ export function Inventory(props) {
                 <h1>Inventory Management System</h1>
                 <h2>Active Inventory</h2>
                 { (props.add)
-                    ? <Button text='Add Items' add={true} next="purchaseOrder" changeView={props.changeView} />
+                    ? <Button text='Add Items' addItem={true} next="purchaseOrder" changeView={props.changeView} />
                     : <Button text='Create Purchase Order' next="purchaseOrder" changeView={props.changeView} />
                 }
                 

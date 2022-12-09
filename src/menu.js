@@ -15,13 +15,13 @@ const FLEX_BASE ={
 class Menu extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: 'dashboard', username: undefined, add: false }
+    this.state = { view: 'dashboard', username: undefined, add: false, addItem: false, addClient: false }
     this.handleClick=this.handleClick.bind(this);
     this.handleChange=this.handleChange.bind(this);
   }
 
-  handleClick(view,add=false){
-    this.setState({view,add})
+  handleClick(view,add=false,addItem=false,addClient=false){
+    this.setState({view,add,addItem,addClient})
   }
 
   handleChange(username){
@@ -82,7 +82,7 @@ class Menu extends Component {
         }
         <div style={hm} onClick={()=>this.handleClick('dashboard')}>&#8962;</div>
       </div>
-      <Body view={this.state.view} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick} />
+      <Body view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick} />
     </>
     )
   }
