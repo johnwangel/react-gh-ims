@@ -25,11 +25,31 @@ export function Status(props) {
         flexDirection: 'column',
     }
 
+    const srch = {
+        ...FLEX_BASE
+      }
+  
+      const spc = {
+        marginLeft: '5px',
+        marginRight: '5px',
+        cursor: 'pointer',
+      }
+
+      const srchrow = {
+        ...FLEX_BASE,
+        justifyContent: 'flex-start',
+        width: '100%',
+      }
+
+
     const columns = [ 'Details', 'status', 'company', 'created', 'PO Sent', 'PO Accepted', 'Invoice Sent','Paid', 'Shipped', 'Shipper', 'Tracking' ]
 
     return  <div>
                 <h1>Inventory Management System</h1>
                 <h2>Status View for {props.p.permission}</h2>
+                <div style={srchrow}>
+                    <div style={srch}><div style={spc}>Search Orders:</div> <input type='text'></input><div style={spc}>&#x1f50d;</div></div>
+                </div>
                 <table style={tableStyle} className='inventoryHeaderRow'>
                 <thead><tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} />)}</tr></thead>
                    <tbody>

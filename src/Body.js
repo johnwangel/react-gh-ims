@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Status} from './status.js'
 import {Dashboard,Auth,Login,Register,Thanks} from './views.js'
-import {Inventory} from './inventory.js'
+import {Inventory,AddItem} from './inventory.js'
 import {PurchaseOrder} from './purchaseOrder.js'
 import {PayInvoice,Invoice,SendInvoice,SendPO} from './invoice.js'
 import {Clients} from './clients.js'
@@ -35,6 +35,7 @@ class Body extends Component {
         {(this.props.view==='login')?<Login p={this.props} />:null}
         {(this.props.view==='register')?<Register p={this.props} />:null}
         {(this.props.view==='inventory')?<Inventory p={this.props}/>:null}
+        {(this.props.view==='addItem')?<AddItem p={this.props}/>:null}
         {(this.props.view==='purchaseOrder')?<PurchaseOrder p={this.props} />:null}
         {(this.props.view==='sendInvoice')?<SendInvoice p={this.props} />:null}
         {(this.props.view==='sendPO')?<SendPO p={this.props} />:null}

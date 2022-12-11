@@ -20,9 +20,8 @@ const FLEX_BASE ={
 export function PurchaseOrder(props) {
     const [shippingOpt,changeShipping] = useState(true)
     const [clientOpt,changeClient] = useState(true)
+    const [showView,changeView] = useState(1)
 
-
-    const [showView,changeView] = useState(1);
     const tableStyle = {
         width: '100%',
         borderCollapse: 'collapse',
@@ -75,6 +74,8 @@ export function PurchaseOrder(props) {
     const columnsClient = [ 'Company', 'Contact', 'Address', 'City', 'State', 'Zip', 'Phone','Email' ]
     const columnsAddress = [ 'Contact', 'Address', 'City', 'State', 'Zip' ]
 
+    const c1 = clients[1]
+
     const shipping = [
         { speed: 'Ground', cost: '$9.99'},
         { speed: 'Standard', cost: '$15.99'},
@@ -90,26 +91,30 @@ export function PurchaseOrder(props) {
 
                 <div style={section}>
                     <h3>Client</h3>
+                    { (props.p.status==='PO Sent' && props.p.permission==='Client')
+                        ? <>{c1.company}, {c1.city}, {c1.state}</>
+                        : <>
+                                <div style={radioSty}>
+                                    <input type='radio' name='client' checked={clientOpt} onChange={()=>changeClient(!clientOpt)} /><label>Select Client</label>
+                                    <input  style={radioRight} type='radio' name='client' checked={!clientOpt} onChange={()=>changeClient(!clientOpt)}/><label>Add Client</label>
+                                </div>
 
-                    <div style={radioSty}>
-                        <input type='radio' name='client' checked={clientOpt} onChange={()=>changeClient(!clientOpt)} /><label>Select Client</label>
-                        <input  style={radioRight} type='radio' name='client' checked={!clientOpt} onChange={()=>changeClient(!clientOpt)}/><label>Add Client</label>
-                    </div>
+                                { (clientOpt)
+                                    ?<select style={selectSty}>
+                                            {client.map( (item,key)=><option key={key}>{item.company}, {item.city}, {item.state}</option>)}
+                                        </select>
+                                    : <div><Button text='Add a Client' next="addClient" p={props.p} /></div>
+                                }
 
-                    { (clientOpt)
-                        ?<select style={selectSty}>
-                                {client.map( (item,key)=><option key={key}>{item.company}, {item.city}, {item.state}</option>)}
-                            </select>
-                        : <div><Button text='Add a Client' next="addClient" p={props.p} /></div>
+                          </>
                     }
                 </div>
 
                 <div style={section}>
-                    <h3>Items</h3>
-                    { (props.p.addItem)
+                    <h3>Merchandise</h3>
+                    { (props.p.addItem || props.p.permission==='Client')
                         ?   <>
-                                <h3>Merchandise</h3>
-                                <table style={tableStyle} className='inventoryHeaderRow'>
+                                 <table style={tableStyle} className='inventoryHeaderRow'>
                                     <thead><tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr></thead>
                                     <tbody>{ pd.map( (item,key)=><InventoryCell inv={true} hide={true} key={key} add={false} item={item} />  )}</tbody>
                                 </table>
@@ -121,27 +126,41 @@ export function PurchaseOrder(props) {
                 <div style={section}>
                     <h3>Shipping Address</h3>
 
-                    <div style={radioSty}>
-                        <input type='radio' name='shippingAdd' checked={shippingOpt} onChange={()=>changeShipping(!shippingOpt)} /><label>Select Shipping Address</label>
-                        <input  style={radioRight} type='radio' name='shippingAdd' checked={!shippingOpt} onChange={()=>changeShipping(!shippingOpt)}/><label>Add Shipping Address</label>
-                    </div>
-
-                    { (shippingOpt)
-                        ?   <select style={selectSty}>
-                                {client.map( (item,key)=><option key={key}>{item.addresses[0].name}, {item.addresses[0].address}. {item.addresses[0].city}, {item.addresses[0].state} {item.addresses[0].zip}</option>)}
-                            </select>
-                        : <div><Button text='Add an Address' next="" p={props.p} /></div>
+                    { (props.p.status==='PO Sent' && props.p.permission==='Client')
+                        ? <>{c1.addresses[0].name}<br />
+                            {c1.addresses[0].address}<br />
+                            {c1.addresses[0].city}, {c1.addresses[0].state}, {c1.addresses[0].zip}
+                          </>
+                        : <>
+                            <div style={radioSty}>
+                                <input type='radio' name='shippingAdd' checked={shippingOpt} onChange={()=>changeShipping(!shippingOpt)} /><label>Select Shipping Address</label>
+                                <input  style={radioRight} type='radio' name='shippingAdd' checked={!shippingOpt} onChange={()=>changeShipping(!shippingOpt)}/><label>Add Shipping Address</label>
+                            </div>
+                            { (shippingOpt)
+                                ?   <select style={selectSty}>
+                                        {client.map( (item,key)=><option key={key}>{item.addresses[0].name}, {item.addresses[0].address}. {item.addresses[0].city}, {item.addresses[0].state} {item.addresses[0].zip}</option>)}
+                                    </select>
+                                : <div><Button text='Add an Address' next="" p={props.p} /></div>
+                            }
+                           </>
                     }
                 </div>
 
                 <div style={section}>
                     <h3>Shipping Options</h3>
-                    { shipping.map((opt,key)=> <div key={key}><input type='radio' name='shipping' />{opt.speed}: {opt.cost}</div>)}
+                    { (props.p.status==='PO Sent' && props.p.permission==='Client')
+                        ? <>UPS Ground: $9.99</>
+                        : <>{ shipping.map((opt,key)=> <div key={key}><input type='radio' name='shipping' />{opt.speed}: {opt.cost}</div>)}</>
+                }
                 </div>
 
                 <div style={buttonSty}>
-                    <Button text='Send PO to Client' next="sendPO" p={props.p} />
-                    <Button text='Export PO' next="invoice" p={props.p} />
+                    { (props.p.status==="PO Sent" && props.p.permission==='Client')
+                        ? <Button text='Accept Purchase Order' next="dashboard" p={props.p} />
+                        : <><Button text='Send PO to Client' next="sendPO" p={props.p} />
+                            <Button text='Export PO' next="sendPO" p={props.p} /></>
+                    }
+                    
                 </div>
 
             </div>

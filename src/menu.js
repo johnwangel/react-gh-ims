@@ -58,7 +58,7 @@ class Menu extends Component {
     return (
       <>
         <div className="menu" style={menuSty}>
-          <MenuItems status={this.state.status} permission={this.state.permission} view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick}  />
+          <MenuItems username={this.state.username} status={this.state.status} permission={this.state.permission} view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick}  />
         </div>
         <Body status={this.state.status} permission={this.state.permission} view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick} />
       </>

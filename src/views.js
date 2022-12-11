@@ -199,16 +199,6 @@ export function MenuItems(props){
         marginBottom: '15px',
       }
   
-      const srch = {
-        ...FLEX_BASE
-      }
-  
-      const spc = {
-        marginLeft: '5px',
-        marginRight: '5px',
-        cursor: 'pointer',
-      }
-  
       const hm = {
         fontSize: '24pt',
         cursor: 'pointer',
@@ -216,9 +206,6 @@ export function MenuItems(props){
 
     return  <>
                 <div style={itemSty}>IMS</div>
-                {/* <div style={itemSty}>
-                    <div style={srch}><div style={spc}>Search:</div> <input type='text'></input><div style={spc} onClick={()=>props.handleClick('profile')}>&#x1f50d;</div></div>
-                </div> */}
                 <Button text='Dashboard' next="dashboard" p={props} />
                 { (props.permission==='Client') ?  null : <Button text='Inventory' next="inventory" p={props} /> }
                 <Button text='Order Tracking' next="status" p={props}  />
