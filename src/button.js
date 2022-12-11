@@ -10,7 +10,8 @@ export default function Button(props) {
         color: 'black',
         fontSize: '10pt',
         cursor: 'pointer',
-        minWidth: '100px',        
+        minWidth: '100px',
+        margin: '0 5px',        
     }
 
     const buttonHover = {
@@ -22,7 +23,12 @@ export default function Button(props) {
     return <button  onMouseEnter={()=>changeHover(true)} 
                     onMouseLeave={()=>changeHover(false)} 
                     style={(hovering)?buttonHover:buttonStyle} 
-                    onClick={()=>props.changeView(props.next,props.add,props.addItem,props.addClient)}>
+                    onClick={()=>props.p.changeView(props.next,
+                                                    (props.add)?props.add:props.p.add,
+                                                    (props.addItem)?props.addItem:props.p.addItem,
+                                                    (props.addClient)?props.addClient:props.p.addClient,
+                                                    (props.status)?props.status:props.p.status
+                                                )}>
             {props.text}
             </button>
 }

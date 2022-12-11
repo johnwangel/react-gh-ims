@@ -15,8 +15,6 @@ const FLEX_BASE ={
 
 export function Clients(props) {
 
-    console.log('client',props)
-
     const tableStyle = {
         width: '100%',
         borderCollapse: 'collapse',
@@ -28,7 +26,7 @@ export function Clients(props) {
         flexDirection: 'column',
     }
 
-    const columns = [ 'company', 'name', 'address', 'city', 'state', 'zip' ]
+    const columns = [ 'company', 'name', 'address', 'city', 'state', 'zip','phone', 'email' ]
     if (props.add) columns.push('Select')
 
     return  <div>
@@ -36,7 +34,7 @@ export function Clients(props) {
                 <h2>Clients</h2>
                 <table style={tableStyle} className='inventoryHeaderRow'>
                    <tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr>
-                   { clients.map( (item,key)=><ClientCell key={key} add={props.add} item={item} changeView={props.changeView} />  )}
+                   { clients.map( (item,key)=><ClientCell key={key} p={props.p} item={item} />  )}
                 </table>
             </div>
 }
@@ -71,10 +69,11 @@ export function ClientCell(props) {
                 <td style={leftSty} className='inventoryCell'>{props.item.city}</td>
                 <td style={leftSty} className='inventoryCell'>{props.item.state}</td>
                 <td style={rightSty} className='inventoryCell'>{props.item.zip}</td>
+                <td style={rightSty} className='inventoryCell'>{props.item.phone}</td>
                 <td style={rightSty} className='inventoryCell'>{props.item.email}</td>
                 { (props.add) 
                     ? <td style={addSty} className='addCell'>
-                        <Button text='Select' addClient={true} next="purchaseOrder" changeView={props.changeView} />
+                        <Button text='Select' addClient={true} next="purchaseOrder" p={props.p} />
                        </td> 
                     : null }
             </tr>

@@ -6,8 +6,7 @@ import {Size} from './helpers.js'
 import {idata,clients} from './inventory_data.js'
 
 const pd=idata.slice(4,8)
-const client=clients.slice(1)
-
+const client=clients
 
 const size=Size()
 
@@ -19,6 +18,10 @@ const FLEX_BASE ={
 }
 
 export function PurchaseOrder(props) {
+    const [shippingOpt,changeShipping] = useState(true)
+    const [clientOpt,changeClient] = useState(true)
+
+
     const [showView,changeView] = useState(1);
     const tableStyle = {
         width: '100%',
@@ -31,18 +34,49 @@ export function PurchaseOrder(props) {
         flexDirection: 'column',
     }
 
+    const selectSty = {
+        padding: '10px',
+        marginBottom: '25px',
+        fontSize: '12pt',
+    }
+
+    const statusStyle = {
+        fontWeight: 'bold',
+        fontSize: '24pt',
+        margin: '15px 0'
+    }
+
+    const statusLabel = {
+        color: 'red',
+    }
+
+    const section = {
+        borderTop: '1px solid black',
+        padding: '20px',
+        margin: '0 100px',
+    }
+
     const buttonSty = {
         ...FLEX_BASE,
+        ...section,
         justifyContent: 'space-around',
-        margin: '25px auto',
     } 
 
+    const radioSty = {
+        ...FLEX_BASE,
+        marginBottom: '25px',
+    }
+
+    const radioRight = {
+        marginLeft: '25px',
+    }
+
     const columns = [ 'SKU', 'Vendor', 'Type', 'Style', 'Size', 'Sale $', 'Retail $', 'Qty' ]
-    const columnsClient = [ 'Company', 'Contact', 'Address', 'City', 'State', 'Zip', 'Email' ]
+    const columnsClient = [ 'Company', 'Contact', 'Address', 'City', 'State', 'Zip', 'Phone','Email' ]
     const columnsAddress = [ 'Contact', 'Address', 'City', 'State', 'Zip' ]
 
     const shipping = [
-        { speed: 'Economy', cost: '$9.99'},
+        { speed: 'Ground', cost: '$9.99'},
         { speed: 'Standard', cost: '$15.99'},
         { speed: 'Expedited', cost: '$25.99'},
         { speed: 'Overnight', cost: '$60.99'},
@@ -52,53 +86,62 @@ export function PurchaseOrder(props) {
                 <h1>Inventory Management System</h1>
                 <h2>Purchase Order</h2>
 
-                <div>
-                    { (props.addItem)
+                <div style={statusStyle} className='status'>Status: <span style={statusLabel}>{props.p.status}</span></div>
+
+                <div style={section}>
+                    <h3>Client</h3>
+
+                    <div style={radioSty}>
+                        <input type='radio' name='client' checked={clientOpt} onChange={()=>changeClient(!clientOpt)} /><label>Select Client</label>
+                        <input  style={radioRight} type='radio' name='client' checked={!clientOpt} onChange={()=>changeClient(!clientOpt)}/><label>Add Client</label>
+                    </div>
+
+                    { (clientOpt)
+                        ?<select style={selectSty}>
+                                {client.map( (item,key)=><option key={key}>{item.company}, {item.city}, {item.state}</option>)}
+                            </select>
+                        : <div><Button text='Add a Client' next="addClient" p={props.p} /></div>
+                    }
+                </div>
+
+                <div style={section}>
+                    <h3>Items</h3>
+                    { (props.p.addItem)
                         ?   <>
                                 <h3>Merchandise</h3>
                                 <table style={tableStyle} className='inventoryHeaderRow'>
-                                    <tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr>
-                                    { pd.map( (item,key)=><InventoryCell inv={true} key={key} add={false} item={item} />  )}
+                                    <thead><tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr></thead>
+                                    <tbody>{ pd.map( (item,key)=><InventoryCell inv={true} hide={true} key={key} add={false} item={item} />  )}</tbody>
                                 </table>
                             </>
-                        : <Button text='Add Items' add={true} next="inventory" changeView={props.changeView} />
+                        : <Button text='Add Items' add={true} next="inventory" p={props.p} />
                     }
                 </div>
 
-                <div>
-                    { (props.addClient)
-                        ? <>
-                            <h3>Client</h3>
-                            <table style={tableStyle} className='inventoryHeaderRow'>
-                                <tr>{ columnsClient.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr>
-                                { client.map( (item,key)=><ClientCell inv={true} key={key} add={false} item={item} />  )}
-                            </table>
-                          </>
-                        : <Button text='Add Client' add={true} next="clients" changeView={props.changeView} />
+                <div style={section}>
+                    <h3>Shipping Address</h3>
+
+                    <div style={radioSty}>
+                        <input type='radio' name='shippingAdd' checked={shippingOpt} onChange={()=>changeShipping(!shippingOpt)} /><label>Select Shipping Address</label>
+                        <input  style={radioRight} type='radio' name='shippingAdd' checked={!shippingOpt} onChange={()=>changeShipping(!shippingOpt)}/><label>Add Shipping Address</label>
+                    </div>
+
+                    { (shippingOpt)
+                        ?   <select style={selectSty}>
+                                {client.map( (item,key)=><option key={key}>{item.addresses[0].name}, {item.addresses[0].address}. {item.addresses[0].city}, {item.addresses[0].state} {item.addresses[0].zip}</option>)}
+                            </select>
+                        : <div><Button text='Add an Address' next="" p={props.p} /></div>
                     }
                 </div>
 
-                <div>
-                    { (props.addClient)
-                        ? <>
-                            <h3>Shipping Address</h3>
-                            <table style={tableStyle} className='inventoryHeaderRow'>
-                                <tr>{ columnsAddress.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr>
-                                { client.map( (item,key)=><ShippingCell inv={true} key={key} add={false} item={item.addresses[0]} />  )}
-                            </table>
-                          </>
-                        : null
-                    }
-                </div>
-
-                <div>
+                <div style={section}>
                     <h3>Shipping Options</h3>
-                    { shipping.map((opt,key)=> <div><input type='radio' name='shipping' />{opt.speed}: {opt.cost}</div>)}
+                    { shipping.map((opt,key)=> <div key={key}><input type='radio' name='shipping' />{opt.speed}: {opt.cost}</div>)}
                 </div>
 
                 <div style={buttonSty}>
-                    <Button text='Send Invoice' next="sendInvoice" changeView={props.changeView} />
-                    <Button text='Export Invoice' next="invoice" changeView={props.changeView} />
+                    <Button text='Send PO to Client' next="sendPO" p={props.p} />
+                    <Button text='Export PO' next="invoice" p={props.p} />
                 </div>
 
             </div>

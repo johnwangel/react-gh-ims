@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import Body from './Body.js'
+import {MenuItems} from './views.js'
 import Button from './button.js'
 import {Size} from './helpers.js';
 
-const size=Size();
+const size = Size()
 
 const FLEX_BASE ={
     display: 'flex',
@@ -15,17 +16,26 @@ const FLEX_BASE ={
 class Menu extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: 'dashboard', username: undefined, add: false, addItem: false, addClient: false }
+    this.state = { view: 'dashboard', 
+                   username: undefined,
+                   permission: 'Merchant', 
+                   add: false, 
+                   addItem: false, 
+                   addClient: false,
+                   status: 'Created',
+                  }
     this.handleClick=this.handleClick.bind(this);
     this.handleChange=this.handleChange.bind(this);
   }
 
-  handleClick(view,add=false,addItem=false,addClient=false){
-    this.setState({view,add,addItem,addClient})
+  handleClick(view,add=false,addItem=false,addClient=false,status='Created'){
+    this.setState({view,add,addItem,addClient,status})
   }
 
   handleChange(username){
     this.setState({username})
+    if (username==='Client') this.setState({permission:'Client'})
+    if (username==='Merchant') this.setState({permission:'Merchant'})
   }
 
   render() {
@@ -45,45 +55,13 @@ class Menu extends Component {
         marginBottom: '8px',
     }
 
-    const itemSty = {
-      ...FLEX_BASE,
-      marginBottom: '15px',
-    }
-
-    const srch = {
-      ...FLEX_BASE
-    }
-
-    const spc = {
-      marginLeft: '5px',
-      marginRight: '5px',
-      cursor: 'pointer',
-    }
-
-    const hm = {
-      fontSize: '24pt',
-      cursor: 'pointer',
-    }
-
     return (
-    <>
-      <div className="menu" style={menuSty}>
-        <div style={itemSty}>IMS</div>
-        <div style={itemSty}>
-            <div style={srch}><div style={spc}>Search:</div> <input type='text'></input><div style={spc} onClick={()=>this.handleClick('profile')}>&#x1f50d;</div></div>
+      <>
+        <div className="menu" style={menuSty}>
+          <MenuItems status={this.state.status} permission={this.state.permission} view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick}  />
         </div>
-        <Button text='Dashboard' next="dashboard" changeView={this.handleClick} />
-        <Button text='Inventory' next="inventory" changeView={this.handleClick} />
-        <Button text='Purchase Orders' next="purchaseOrder" changeView={this.handleClick} />
-        <Button text='Order Tracking' next="tracking" changeView={this.handleClick} />
-        {(this.state.username)
-          ? <div>Welcome {this.state.username}</div>
-          : <Button text='Sign In' next="login" changeView={this.handleClick}/>
-        }
-        <div style={hm} onClick={()=>this.handleClick('dashboard')}>&#8962;</div>
-      </div>
-      <Body view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick} />
-    </>
+        <Body status={this.state.status} permission={this.state.permission} view={this.state.view} addItem={this.state.addItem} addClient={this.state.addClient} add={this.state.add} handleChange={this.handleChange} changeView={this.handleClick} />
+      </>
     )
   }
 }

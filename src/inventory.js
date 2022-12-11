@@ -3,11 +3,7 @@ import Button from './button.js'
 import {Size} from './helpers.js'
 import {idata} from './inventory_data.js'
 
-
 const pd=idata
-
-console.log(pd)
-
 const size=Size()
 
 const FLEX_BASE ={
@@ -31,19 +27,24 @@ export function Inventory(props) {
     }
 
     const columns = [ 'SKU', 'Vendor', 'Type', 'Style', 'Size', 'Sale $', 'Retail $', 'Qty' ]
-    if (props.add) columns.push('Add') 
+    columns.push((props.p.add) ? 'Add' : 'Edit')
 
     return  <div>
                 <h1>Inventory Management System</h1>
                 <h2>Active Inventory</h2>
-                { (props.add)
-                    ? <Button text='Add Items' addItem={true} next="purchaseOrder" changeView={props.changeView} />
-                    : <Button text='Create Purchase Order' next="purchaseOrder" changeView={props.changeView} />
+                { (props.p.add)
+                    ? <Button text='Add Selected Items to Purchase Order' next="purchaseOrder" addItem={true} p={props.p} />
+                    : <>
+                        <Button text='Create Purchase Order' next="purchaseOrder" p={props.p} />
+                        <Button text='Add an Item' next="purchaseOrder" p={props.p} />
+                      </>
                 }
                 
                 <table style={tableStyle} className='inventoryHeaderRow'>
-                   <tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} /> )  }</tr>
-                   { pd.map( (item,key)=><InventoryCell key={key} add={props.add} item={item} />  )}
+                   <thead><tr>{ columns.map( (col,k)=><HeadCell key={k} title={col} />)}</tr></thead>
+                   <tbody>
+                   { pd.map( (item,key)=><InventoryCell key={key} p={props.p} item={item} /> )}
+                   </tbody>
                 </table>
             </div>
 }
@@ -56,8 +57,13 @@ export function HeadCell(props) {
         borderLeft: '1px solid white',
         padding: '10px',
         textAlign: 'left',
+        textTransform: 'uppercase',
     }
-    return  <th style={invSty} className='inventoryHeaderRow'>{props.title}</th>
+    const chevron = {
+        padding: '0 10px 25px 10px',
+        fontSize: '14pt',
+    }
+    return  <th style={invSty} className='inventoryHeaderRow'>{props.title}<span style={chevron}>&#8964;</span></th>
 }
 
 export function InventoryCell(props) {
@@ -92,10 +98,15 @@ export function InventoryCell(props) {
                 <td style={rightSty} className='inventoryCell'>${props.item.wholesale}.00</td>
                 <td style={rightSty} className='inventoryCell'>${props.item.retail}.00</td>
                 <td style={rightSty} className='inventoryCell'>{props.item.count}</td>
-                { (props.add) 
+                
+                { (!props.hide)
                     ? <td style={addSty} className='addCell'>
-                        <input onChange={(event)=>changeCount(event.target.value)} style={inputSty} type="number" max={props.item.count} value={count}/>
-                      </td> 
-                    : null }
+                        { (props.p.add) 
+                            ? <input onChange={(event)=>changeCount(event.target.value)} style={inputSty} type="number" max={props.item.count} value={count}/>
+                            : <Button text='Edit' next="inventory" p={props.p}/>
+                        }
+                      </td>
+                    :null
+                }
             </tr>
 }

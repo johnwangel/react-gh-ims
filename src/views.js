@@ -7,31 +7,34 @@ const size=Size()
 const FLEX_BASE ={
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
 }
 
 export function Dashboard(props) {
     const boxStyle = {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gridTemplateRows: 'auto',
-        flexDirection: 'column',
+        ...FLEX_BASE,
     }
 
-    const boxes = [
+    let boxes = [
                     {title:'Accepted Orders',count:8},
                     {title:'Pending Orders',count:17},
                     {title:'Pending Invoices',count:14},
                     {title:'To Ship',count:10},
                   ]
 
+    if (props.p.permission==='Client') boxes = [
+        {title:'Pending Invoices',count:1},
+        {title:'Pending Orders',count:1},
+        {title:'Accepted Orders',count:1},
+        {title:'Shipped',count:0},
+    ]
 
     return <div>
                 <h1>Inventory Management System</h1>
-                <h2>Dashboard</h2>
+                <h2>Dashboard for {props.p.permission}</h2>
                 <div className="boxes" style={boxStyle}>
-                    { boxes.map((box,key)=><DashBox key={key} data={box} />)}
+                    { boxes.map((box,key)=><DashBox key={key} data={box} p={props.p} />)}
                 </div>
             </div>
 }
@@ -68,7 +71,8 @@ export function DashBox(props) {
                     style={(hovering)?boxStyleH:boxStyle} 
                     className='dashbox' 
                     onMouseEnter={()=>changeHover(true)} 
-                    onMouseLeave={()=>changeHover(false)} >
+                    onMouseLeave={()=>changeHover(false)} 
+                    onClick={()=>props.p.changeView('status')} >
                 <div style={boxTitle} className='boxTitle'>{props.data.title}</div>
                 <div style={boxCount} className='ItemCount'>{props.data.count}</div>
             </div>
@@ -81,7 +85,7 @@ export function Auth(props) {
         textDecoration: 'underline',
         cursor: 'pointer',
     }
-    return <div><span style={linkStyle} onClick={()=>props.changeView('login')}>Log In</span> or <span style={linkStyle} onClick={()=>props.changeView('register')}>Register</span></div>
+    return <div><span style={linkStyle} onClick={()=>props.p.changeView('login')}>Log In</span> or <span style={linkStyle} onClick={()=>props.p.changeView('register')}>Register</span></div>
 }
 
 export function Login(props) {
@@ -90,7 +94,7 @@ export function Login(props) {
         textDecoration: 'underline',
         cursor: 'pointer',
     }
-    return <div><h1>Sign In</h1><UserForm type="login" next="welcome"  handleChange={props.handleChange} changeView={props.changeView} /></div>
+    return <div><h1>Sign In</h1><UserForm type="login" p={props.p} /></div>
 }
 
 export function Register(props) {
@@ -99,7 +103,7 @@ export function Register(props) {
         textDecoration: 'underline',
         cursor: 'pointer',
     }
-    return <div><h1>Register</h1><UserForm  type="reg" next="rev1" handleChange={props.handleChange} changeView={props.changeView}/></div>
+    return <div><h1>Register</h1><UserForm  type="reg" next="rev1" p={props.p} /></div>
 }
 
 export function UserForm(props){
@@ -149,7 +153,7 @@ export function UserForm(props){
                         ?   <div style={rowSty}>
                                 <label style={headSty}>Name</label>
                                 <input 
-                                    onChange={(event)=>props.handleChange(event.target.value)} 
+                                    onChange={(event)=>props.p.handleChange(event.target.value)} 
                                     style={inputSty} 
                                     type="text" 
                                     name='username'>
@@ -161,7 +165,7 @@ export function UserForm(props){
                     <div style={rowSty}>
                         <label style={headSty}>Username (use email):</label>
                         <input 
-                                    onChange={(event)=>props.handleChange(event.target.value)} 
+                                    onChange={(event)=>props.p.handleChange(event.target.value)} 
                                     style={inputSty} 
                                     type="text" 
                                     name='username'></input>
@@ -171,7 +175,7 @@ export function UserForm(props){
                         <input type='password' style={inputSty}></input>
                     </div>
                  </div>
-                 <Button text='Go' next={props.next} changeView={props.changeView} />
+                 <Button text='Go' next='dashboard' p={props.p} />
             </div>
 }
 
@@ -183,6 +187,45 @@ export function Thanks(props) {
     }
     return <div>
                 <h1>Thank you for Leaving a Review!</h1>
-                <div style={linkStyle} onClick={()=>props.changeView('profile')}>Go to Teacher Profile</div>
+                <div style={linkStyle} onClick={()=>props.p.changeView('profile')}>Go to Teacher Profile</div>
             </div>
+}
+
+
+export function MenuItems(props){
+
+    const itemSty = {
+        ...FLEX_BASE,
+        marginBottom: '15px',
+      }
+  
+      const srch = {
+        ...FLEX_BASE
+      }
+  
+      const spc = {
+        marginLeft: '5px',
+        marginRight: '5px',
+        cursor: 'pointer',
+      }
+  
+      const hm = {
+        fontSize: '24pt',
+        cursor: 'pointer',
+      }
+
+    return  <>
+                <div style={itemSty}>IMS</div>
+                {/* <div style={itemSty}>
+                    <div style={srch}><div style={spc}>Search:</div> <input type='text'></input><div style={spc} onClick={()=>props.handleClick('profile')}>&#x1f50d;</div></div>
+                </div> */}
+                <Button text='Dashboard' next="dashboard" p={props} />
+                { (props.permission==='Client') ?  null : <Button text='Inventory' next="inventory" p={props} /> }
+                <Button text='Order Tracking' next="status" p={props}  />
+                {(props.username)
+                    ? <div>Welcome {props.username}</div>
+                    : <Button text='Sign In' next="login" p={props} />
+                }
+                <div style={hm} onClick={()=>props.changeView('dashboard')}>&#8962;</div>
+            </>
 }

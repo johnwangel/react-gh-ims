@@ -1,3 +1,77 @@
+export const statusChart = [
+    {
+        id: '4',
+        status: 'Shipped',
+        company: 'Lana Fashions',
+        created: '2022-12-03',
+        po_sent: '2022-12-03',
+        po_accepted: '2022-12-03',
+        inv_sent: '2022-12-03',
+        inv_paid: '2022-12-04',
+        shipped: '2022-12-05',
+        completed: false,
+        tracking_id: 'F013456',
+        shipping_vendor: 'FedEx'
+    },
+    {
+        id: '2',
+        status: 'PO Sent',
+        company: 'Lana Fashions',
+        created: '2022-12-01',
+        po_sent: '2022-12-01',
+        po_accepted: '',
+        inv_sent: '',
+        inv_paid: '',
+        shipped: '',
+        completed: false,
+        tracking_id: '',
+        shipping_vendor: 'FedEx'
+    },
+    {
+        id: '5',
+        status: 'Invoice Sent',
+        company: 'Lana Fashions',
+        created: '2022-12-05',
+        po_sent: '2022-12-06',
+        po_accepted: '2022-12-07',
+        inv_sent: '2022-12-08',
+        inv_paid: '',
+        shipped: '',
+        completed: false,
+        tracking_id: '',
+        shipping_vendor: 'FedEx'
+    },
+
+    {
+        id: '1',
+        status: 'Created',
+        company: 'Schmo Resale',
+        created: '2022-12-01',
+        po_sent: '',
+        po_accepted: '',
+        inv_sent: '',
+        inv_paid: '',
+        shipped: '',
+        completed: false,
+        tracking_id: '',
+        shipping_vendor: 'UPS'
+    },
+    {
+        id: '3',
+        status: 'Invoice Paid',
+        company: 'Schmo Resale',
+        created: '2022-11-20',
+        po_sent: '2022-11-20',
+        po_accepted: '2022-11-21',
+        inv_sent: '2022-11-21',
+        inv_paid: '2022-11-23',
+        shipped: '',
+        completed: false,
+        tracking_id: '',
+        shipping_vendor: 'USPS'
+    },
+]
+
 export const clients = [
     {
         name: 'Joe Schmo',
@@ -7,6 +81,7 @@ export const clients = [
         state: 'NY',
         zip: '12301',
         email : 'joe.schmo@schmoeresale.com',
+        phone: '555-555-5555',
         addresses : [
             {
                 name: 'Mary Schmo',
@@ -15,6 +90,7 @@ export const clients = [
                 city: 'Schenectady',
                 state: 'NY',
                 zip: '12301',
+                phone: '555-555-5555',
             }
         ]
     },
@@ -26,6 +102,7 @@ export const clients = [
         state: 'CA',
         zip: '90001',
         email : 'lana.lang@lanafashions.com',
+        phone: '212-777-7777',
         addresses : [
             {
                 name: 'Joe Lang',
@@ -34,6 +111,7 @@ export const clients = [
                 city: 'Los Angeles',
                 state: 'CA',
                 zip: '90022',
+                phone: '212-777-7777',
             }
         ]
     },
